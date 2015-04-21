@@ -1,0 +1,18 @@
+{
+  "name": "bytehand",
+  "version": "0.0.0",
+  "description": "bytehand.com sms gateway api for JavaScript ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bytehand",
+    "bytehand.com",
+    "sms",
+    "gateway",
+    "api"
+  ],
+  "author": "Artem Soroka",
+  "license": "ISC"
+}
