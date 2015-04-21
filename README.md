@@ -5,7 +5,8 @@ bytehand = require("./bytehand")({id: 'YOUR ID', key: 'YOUR KEY'});
 ``` 
 Try to send sms to your friend 
 
-```js bytehand.send({
+```js 
+bytehand.send({
     to: '+79217771234',
     from: 'YANDEX',
     text: '?¡Hola! ¿Cómo te va todo?'
