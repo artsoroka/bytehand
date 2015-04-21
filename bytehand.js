@@ -1,7 +1,7 @@
 var request     = require("request"); 
 var querystring = require("querystring"); 
-
-var API_URL = "http://bytehand.com:3800"; 
+var extend      = require('util')._extend
+var API_URL     = "http://bytehand.com:3800"; 
 
 var Bytehand = function(config){
     this.auth = {
@@ -16,14 +16,41 @@ module.exports = function(config){
 }
 
 Bytehand.prototype.send = function(message, callback){
-    return this._call('send', message, callback); 
+    var url  = this.prepareUrl('send', message); 
+    var self = this; 
+    request.get(url, function(err, response, body){
+        self._handle(err, response, body, callback); 
+    }); 
+    
 }
 
-Bytehand.prototype._call = function(method, params, callback){
-    params.id = this.auth.id; 
-    params.key = this.auth.key; 
+Bytehand.prototype._handle = function(err, response, body, callback){
+    if( err) return callback(err, null);
     
-    var qs = [method, querystring.stringify(params)].join('&'); 
-    var url = [API_URL, qs].join('?'); 
-    callback(url); 
+    var data = this._parseJSON(body); 
+    
+    if( response.statusCode != 200 || data.status != 0) 
+        return callback(data, null); 
+    
+    callback(null, {
+        status: 'OK', 
+        messageId: data.description
+    });
+}
+
+Bytehand.prototype._parseJSON = function(str){
+    var data = null;  
+    try{
+        data = JSON.parse(str); 
+    } catch(e){
+        console.log('could not parse JSON string: ', str, e); 
+    }
+    return data; 
+}
+
+Bytehand.prototype.prepareUrl = function(method, params){
+    params  = extend(this.auth, params); 
+    var qs  = [method, querystring.stringify(params)].join('?'); 
+    
+    return [API_URL, qs].join('/'); 
 }

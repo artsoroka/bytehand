@@ -14,5 +14,8 @@
     "api"
   ],
   "author": "Artem Soroka",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.55.0"
+  }
 }
