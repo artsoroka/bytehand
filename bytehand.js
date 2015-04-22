@@ -28,6 +28,12 @@ Bytehand.prototype.send = function(message, callback){
     });
 }; 
 
+Bytehand.prototype.balance = function(callback){
+    this._call('balance', {}, function(err, response){
+        if( err ) return callback(err, null); 
+        callback(null, response.description); 
+    }); 
+}; 
 
 Bytehand.prototype._call = function(method, message, callback){
     var url  = this.prepareUrl(method, message); 
