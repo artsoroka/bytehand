@@ -1,7 +1,7 @@
 ## bytehand.com API for Node.js
 To start working just set up your ID and KEY 
 ```js 
-bytehand = require("./bytehand")({id: 'YOUR ID', key: 'YOUR KEY'}); 
+var bytehand = require("./bytehand")({id: 'YOUR ID', key: 'YOUR KEY'}); 
 ``` 
 Try to send sms to your friend 
 
@@ -18,7 +18,7 @@ bytehand.send({
 
 ```
 
-Check status of message 
+Check message status  
 
 ```js 
 
@@ -39,4 +39,18 @@ bytehand.balance(function(error, balance){
 }); 
 
 ``` 
+
+You can use ```https``` by adding ```secure``` property to your config 
+
+```js 
+
+var bytehand = require("./bytehand")({
+    id: 'YOUR ID', 
+    key: 'YOUR KEY'
+    sucure: true
+});
+
+```
+
+But you might see something like ```UNABLE_TO_VERIFY_LEAF_SIGNATURE``` 
 
