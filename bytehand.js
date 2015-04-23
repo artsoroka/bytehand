@@ -2,9 +2,15 @@
 var request     = require("request"); 
 var querystring = require("querystring"); 
 var extend      = require('util')._extend; 
-var API_URL     = "http://bytehand.com:3800"; 
+
+var API_URL     = "bytehand.com"; 
+var API_PORT    = {
+    http: 3800,
+    https: 8443
+};  
 
 var Bytehand = function(config){
+    this.useHttps = config.https || config.secure || false; 
     this.auth = {
         id: config.id || null, 
         key: config.key || null
@@ -30,6 +36,29 @@ Bytehand.prototype.send = function(message, callback){
 
 Bytehand.prototype.balance = function(callback){
     this._call('balance', {}, function(err, response){
+        if( err ) return callback(err, null); 
+        callback(null, response.description); 
+    }); 
+}; 
+
+Bytehand.prototype.status = function(message, callback){
+    
+    var messageId = null; 
+    
+    switch (typeof message) {
+        case 'string':
+            messageId = message; 
+            break;
+        case 'object':
+            messageId = message.id || message.messageId; 
+            break; 
+        default:
+            break; 
+    }
+    
+    if( ! messageId ) return callback('no message identifier', null); 
+    
+    this._call('status', {message: messageId}, function(err, response){
         if( err ) return callback(err, null); 
         callback(null, response.description); 
     }); 
@@ -67,6 +96,8 @@ Bytehand.prototype._parseJSON = function(str){
 Bytehand.prototype.prepareUrl = function(method, message){
     var params  = extend(message, this.auth); 
     var qs      = [method, querystring.stringify(params)].join('?'); 
-    
-    return [API_URL, qs].join('/'); 
+    var schema  = (this.useHttps) ? 'https' : 'http'; 
+    var port    = API_PORT[schema];  
+    var url     = [[schema,API_URL].join('://'), port].join(':');  
+    return [url, qs].join('/'); 
 }; 
